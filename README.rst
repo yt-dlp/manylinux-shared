@@ -1,5 +1,40 @@
-manylinux
-=========
+manylinux-shared
+================
+
+Forked from https://github.com/pypa/manylinux and modified to include ``--enable-shared`` CPython builds for use with PyInstaller.
+
+Only the latest version of the CPython shared library (3.13) is provided in the images.
+
+The fork's GitHub Actions workflows are configured to only build and deploy the following images:
+
+- ``manylinux2014`` images for ``x86_64`` and ``aarch64``.
+
+- ``manylinux_2_28`` images for ``x86_64`` and ``aarch64``.
+
+- ``manylinux_2_31`` image for ``armv7l`` (BETA).
+
+- ``musllinux_1_2`` images for ``x86_64`` and ``aarch64``.
+
+
+Usage of this fork to build any other images is not supported.
+
+
+Differences in image content
+----------------------------
+
+- Shared CPython 3.13 is installed in ``/opt/shared-cpython-3.13``.
+
+- OpenSSL 3.5 is always built and left installed in ``/opt/_internal/openssl-3.5``.
+
+
+Known issues
+------------
+
+- The shared CPython 3.13 builds provided in the  ``musllinux_1_2`` images are not compiled with ``--enable-optimizations`` or ``--with-lto``. This is expected to be resolved when the shared CPython version is bumped to 3.14
+
+
+manylinux (upstream documentation)
+----------------------------------
 
 Older archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 

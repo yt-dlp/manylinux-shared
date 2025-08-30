@@ -122,6 +122,16 @@ RUN export OPENSSL_ROOT=openssl-3.5.2 && \
 COPY --from=cosign-bin /ko-app/cosign /usr/local/bin/cosign
 COPY build_scripts/build-cpython.sh /build_scripts/
 
+# shared CPython
+FROM build_cpython AS shared_cpython
+COPY build_scripts/build-openssl-for-shared-cpython.sh /build_scripts/
+COPY build_scripts/build-shared-cpython.sh /build_scripts/
+RUN export OPENSSL_ROOT=openssl-3.5.2 && \
+    export OPENSSL_HASH=c53a47e5e441c930c3928cf7bf6fb00e5d129b630e0aa873b08258656e7345ec && \
+    export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
+    manylinux-entrypoint /build_scripts/build-openssl-for-shared-cpython.sh
+RUN manylinux-entrypoint /build_scripts/build-shared-cpython.sh thomas@python.org https://accounts.google.com 3.13.7
+
 FROM build_cpython AS build_cpython38
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh lukasz@langa.pl https://github.com/login/oauth 3.8.20
 
@@ -168,6 +178,12 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
       pp310-pypy310_pp73 pp311-pypy311_pp73
+# shared CPython
+RUN --mount=type=bind,target=/shared_cpython,from=shared_cpython \
+    mkdir -p /opt/_internal/openssl-3.5 && \
+    cp -rf /shared_cpython/opt/_internal/openssl-3.5/* /opt/_internal/openssl-3.5/ && \
+    mkdir -p /opt/shared-cpython-3.13 && \
+    cp -rf /shared_cpython/opt/shared-cpython-3.13/* /opt/shared-cpython-3.13/
 
 COPY tests /opt/_internal/tests/
 

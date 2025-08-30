@@ -3,6 +3,20 @@
 # Stop at any error, show all commands
 set -exuo pipefail
 
+# Set defaults for GHA environment variables to allow local usage
+if [ "${REGISTRY:-}" == "" ]; then
+	REGISTRY="ghcr.io"
+fi
+if [ "${OWNER:-}" == "" ]; then
+	OWNER="yt-dlp"
+fi
+if [ "${ORIGIN:-}" == "" ]; then
+	ORIGIN="yt-dlp/manylinux-shared"
+fi
+export REGISTRY
+export OWNER
+export ORIGIN
+
 if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "" ]; then
 	MANYLINUX_BUILD_FRONTEND="docker-buildx"
 fi
@@ -80,7 +94,7 @@ export DEVTOOLSET_ROOTPATH
 export PREPEND_PATH
 export LD_LIBRARY_PATH_ARG
 
-MANYLINUX_IMAGE="quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}"
+MANYLINUX_IMAGE="${REGISTRY}/${OWNER}/${POLICY}_${PLATFORM}-shared:${COMMIT_SHA}"
 
 BUILD_ARGS_COMMON=(
 	"--platform=linux/${GOARCH}"
@@ -108,16 +122,16 @@ elif [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
 	TEST_COMMAND="podman"
 	podman build "${BUILD_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
-	if [ "${GITHUB_REPOSITORY:-}_${GITHUB_EVENT_NAME:-}_${GITHUB_REF:-}" == "pypa/manylinux_push_refs/heads/main" ]; then
-		CACHE_STORE="--cache-to=type=registry,ref=ghcr.io/pypa/manylinux-cache:${POLICY}_${PLATFORM}_main,mode=max,compression=zstd,compression-level=22"
+	if [ "${GITHUB_REPOSITORY:-}_${GITHUB_EVENT_NAME:-}_${GITHUB_REF:-}" == "${ORIGIN}_push_refs/heads/master" ]; then
+		CACHE_STORE="--cache-to=type=registry,ref=ghcr.io/${ORIGIN}-cache:${POLICY}_${PLATFORM}-shared_main,mode=max,compression=zstd,compression-level=22"
 	else
 		USE_LOCAL_CACHE=1
-		CACHE_STORE="--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max,compression=zstd,compression-level=22"
+		CACHE_STORE="--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM}-shared,mode=max,compression=zstd,compression-level=22"
 	fi
 	docker buildx build \
 		--load \
-		"--cache-from=type=registry,ref=ghcr.io/pypa/manylinux-cache:${POLICY}_${PLATFORM}_main" \
-		"--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" \
+		"--cache-from=type=registry,ref=ghcr.io/${ORIGIN}-cache:${POLICY}_${PLATFORM}-shared_main" \
+		"--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}-shared" \
 		"${CACHE_STORE}" \
 		"${BUILD_ARGS_COMMON[@]}"
 else
@@ -127,9 +141,11 @@ fi
 
 ${TEST_COMMAND} run --rm "${MANYLINUX_IMAGE}" /opt/_internal/tests/run_tests.sh
 
+${TEST_COMMAND} run --rm "${MANYLINUX_IMAGE}" /opt/_internal/tests/run_shared_tests.sh
+
 if [ ${USE_LOCAL_CACHE} -ne 0 ]; then
-	if [ -d "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" ]; then
-		rm -rf "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}"
+	if [ -d "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}-shared" ]; then
+		rm -rf "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}-shared"
 	fi
-	mv "$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM}" "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}"
+	mv "$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM}-shared" "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}-shared"
 fi

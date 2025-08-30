@@ -1,15 +1,11 @@
 name: Update dependencies
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/update-dependencies.yml'
   workflow_dispatch:
-  schedule:
-    - cron: '0 18 * * 5'  # "At 18:00 on Friday."
 
 env:
   FORCE_COLOR: '1'
+  ORIGIN: yt-dlp/manylinux-shared
 
 jobs:
   update-dependencies:
@@ -30,7 +26,7 @@ jobs:
     # without rate-limit and PRs get run by GHA.
     - uses: actions/create-github-app-token@v2
       id: generate-token
-      if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
+      if: github.ref == 'refs/heads/master' && github.repository == env.ORIGIN
       with:
         app-id: ${{ secrets.MANYLINUX_BOT_APP_ID }}
         private-key: ${{ secrets.MANYLINUX_BOT_APP_PRIVATE_KEY }}
@@ -43,7 +39,7 @@ jobs:
     - name: "Run update python dependencies"
       run: nox -s update_python_dependencies
     - name: Create Pull Request
-      if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
+      if: github.ref == 'refs/heads/master' && github.repository == env.ORIGIN
       uses: peter-evans/create-pull-request@v7
       with:
         commit-message: Update python dependencies
