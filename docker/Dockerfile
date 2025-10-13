@@ -131,6 +131,7 @@ RUN export OPENSSL_ROOT=openssl-3.5.4 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     manylinux-entrypoint /build_scripts/build-openssl-for-shared-cpython.sh
 RUN manylinux-entrypoint /build_scripts/build-shared-cpython.sh thomas@python.org https://accounts.google.com 3.13.8
+RUN manylinux-entrypoint /build_scripts/build-shared-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0
 
 FROM build_cpython AS build_cpython38
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh lukasz@langa.pl https://github.com/login/oauth 3.8.20
@@ -183,7 +184,9 @@ RUN --mount=type=bind,target=/shared_cpython,from=shared_cpython \
     mkdir -p /opt/_internal/openssl-3.5 && \
     cp -rf /shared_cpython/opt/_internal/openssl-3.5/* /opt/_internal/openssl-3.5/ && \
     mkdir -p /opt/shared-cpython-3.13 && \
-    cp -rf /shared_cpython/opt/shared-cpython-3.13/* /opt/shared-cpython-3.13/
+    cp -rf /shared_cpython/opt/shared-cpython-3.13/* /opt/shared-cpython-3.13/ && \
+    mkdir -p /opt/shared-cpython-3.14 && \
+    cp -rf /shared_cpython/opt/shared-cpython-3.14/* /opt/shared-cpython-3.14/
 
 COPY tests /opt/_internal/tests/
 

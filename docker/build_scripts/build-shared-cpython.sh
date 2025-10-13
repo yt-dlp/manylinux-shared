@@ -50,7 +50,7 @@ CONFIGURE_ARGS=(
 # https://github.com/python/cpython/commit/6146295a5b8e9286ccb8f90818b764c9a0192090
 # https://github.com/python/cpython/issues/90548
 # https://github.com/python/cpython/pull/138348
-if [ "${BASE_POLICY}" == "manylinux" ]; then
+if [ "${BASE_POLICY}" == "manylinux" ] || [ "${CPYTHON_VERSION::5}" == "3.14." ]; then
 	CONFIGURE_ARGS+=(
 		--enable-optimizations
 		--with-computed-gotos
