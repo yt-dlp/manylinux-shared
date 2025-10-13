@@ -26,11 +26,13 @@ fi
 
 if [ "${OS_ID_LIKE}" = "rhel" ];then
 	manylinux_pkg_remove openssl-devel
+	manylinux_pkg_install perl-core
 elif [ "${OS_ID_LIKE}" = "debian" ];then
 	manylinux_pkg_remove libssl-dev
 elif [ "${OS_ID_LIKE}" = "alpine" ]; then
 	manylinux_pkg_remove openssl-dev
 fi
+manylinux_pkg_clean
 
 PARALLEL_BUILDS=
 if [ "$(nproc)" -ge 2 ]; then
