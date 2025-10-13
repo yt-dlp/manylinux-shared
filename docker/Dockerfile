@@ -130,7 +130,7 @@ RUN export OPENSSL_ROOT=openssl-3.5.4 && \
     export OPENSSL_HASH=967311f84955316969bdb1d8d4b983718ef42338639c621ec4c34fddef355e99 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     manylinux-entrypoint /build_scripts/build-openssl-for-shared-cpython.sh
-RUN manylinux-entrypoint /build_scripts/build-shared-cpython.sh thomas@python.org https://accounts.google.com 3.13.7
+RUN manylinux-entrypoint /build_scripts/build-shared-cpython.sh thomas@python.org https://accounts.google.com 3.13.8
 
 FROM build_cpython AS build_cpython38
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh lukasz@langa.pl https://github.com/login/oauth 3.8.20
