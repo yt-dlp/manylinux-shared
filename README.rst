@@ -24,13 +24,27 @@ Differences in image content
 
 - Shared CPython 3.13 is installed in ``/opt/shared-cpython-3.13``.
 
+- Shared CPython 3.14 is installed in ``/opt/shared-cpython-3.14``.
+
 - OpenSSL 3.5 is always built and left installed in ``/opt/_internal/openssl-3.5``.
+
+
+Published images
+----------------
+
+- manylinux2014 x86_64 image: ``ghcr.io/yt-dlp/manylinux2014_x86_64-shared``
+- manylinux2014 aarch64 image: ``ghcr.io/yt-dlp/manylinux2014_aarch64-shared``
+- manylinux_2_28 x86_64 image: ``ghcr.io/yt-dlp/manylinux_2_28_x86_64-shared``
+- manylinux_2_28 aarch64 image: ``ghcr.io/yt-dlp/manylinux_2_28_aarch64-shared``
+- manylinux_2_31 armv7l image: ``ghcr.io/yt-dlp/manylinux_2_31_armv7l-shared``
+- musllinux_1_2 x86_64 image: ``ghcr.io/yt-dlp/musllinux_1_2_x86_64-shared``
+- musllinux_1_2 aarch64 image: ``ghcr.io/yt-dlp/musllinux_1_2_aarch64-shared``
 
 
 Known issues
 ------------
 
-- The shared CPython 3.13 builds provided in the  ``musllinux_1_2`` images are not compiled with ``--enable-optimizations`` or ``--with-lto``. This is expected to be resolved when the shared CPython version is bumped to 3.14
+- The shared CPython 3.13 builds provided in the  ``musllinux_1_2`` images are not compiled with ``--enable-optimizations`` or ``--with-lto``
 
 
 manylinux (upstream documentation)
