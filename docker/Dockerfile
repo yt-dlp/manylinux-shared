@@ -73,8 +73,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-curl.sh /build_scripts/
-RUN export CURL_ROOT=curl-8.15.0 && \
-    export CURL_HASH=d85cfc79dc505ff800cb1d321a320183035011fa08cb301356425d86be8fc53c && \
+RUN export CURL_ROOT=curl-8.16.0 && \
+    export CURL_HASH=a21e20476e39eca5a4fc5cfb00acf84bbc1f5d8443ec3853ad14c26b3c85b970 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     manylinux-entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
@@ -115,8 +115,8 @@ COPY --from=build_mpdecimal /manylinux-buildfs /
 COPY --from=build_sqlite3 /manylinux-buildfs /
 RUN if command -v apk >/dev/null 2>&1; then ldconfig /; else ldconfig; fi
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-3.5.2 && \
-    export OPENSSL_HASH=c53a47e5e441c930c3928cf7bf6fb00e5d129b630e0aa873b08258656e7345ec && \
+RUN export OPENSSL_ROOT=openssl-3.5.4 && \
+    export OPENSSL_HASH=967311f84955316969bdb1d8d4b983718ef42338639c621ec4c34fddef355e99 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 COPY --from=cosign-bin /ko-app/cosign /usr/local/bin/cosign
@@ -136,28 +136,28 @@ FROM build_cpython AS build_cpython38
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh lukasz@langa.pl https://github.com/login/oauth 3.8.20
 
 FROM build_cpython AS build_cpython39
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh lukasz@langa.pl https://github.com/login/oauth 3.9.23
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh lukasz@langa.pl https://github.com/login/oauth 3.9.24
 
 FROM build_cpython AS build_cpython310
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.10.18
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.10.19
 
 FROM build_cpython AS build_cpython311
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.11.13
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.11.14
 
 FROM build_cpython AS build_cpython312
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.11
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.12
 
 FROM build_cpython AS build_cpython313
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.7
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.8
 
 FROM build_cpython AS build_cpython313_nogil
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.7 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.8 nogil
 
 FROM build_cpython AS build_cpython314
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0rc2
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0
 
 FROM build_cpython AS build_cpython314_nogil
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0rc2 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0 nogil
 
 FROM runtime_base
 COPY --from=build_tcl_tk /manylinux-rootfs /
@@ -177,7 +177,7 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     mkdir -p /opt/_internal && \
     cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
-      pp310-pypy310_pp73 pp311-pypy311_pp73
+      pp311-pypy311_pp73
 # shared CPython
 RUN --mount=type=bind,target=/shared_cpython,from=shared_cpython \
     mkdir -p /opt/_internal/openssl-3.5 && \
