@@ -161,12 +161,15 @@ COPY build_scripts/build-cpython.sh /build_scripts/
 FROM build_cpython AS shared_cpython
 COPY build_scripts/build-openssl-for-shared-cpython.sh /build_scripts/
 COPY build_scripts/build-shared-cpython.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-3.5.4 && \
+RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
+    export OPENSSL_ROOT=openssl-3.5.4 && \
     export OPENSSL_HASH=967311f84955316969bdb1d8d4b983718ef42338639c621ec4c34fddef355e99 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
-    manylinux-entrypoint /build_scripts/build-openssl-for-shared-cpython.sh
-RUN manylinux-entrypoint /build_scripts/build-shared-cpython.sh thomas@python.org https://accounts.google.com 3.13.8
-RUN manylinux-entrypoint /build_scripts/build-shared-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0
+    /tmp/cross-compiler/entrypoint /build_scripts/build-openssl-for-shared-cpython.sh
+RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
+    /tmp/cross-compiler/entrypoint /build_scripts/build-shared-cpython.sh thomas@python.org https://accounts.google.com 3.13.8
+RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
+    /tmp/cross-compiler/entrypoint /build_scripts/build-shared-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0
 
 
 FROM build_cpython AS build_cpython38
