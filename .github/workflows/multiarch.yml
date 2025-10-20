@@ -3,9 +3,6 @@ name: Deploy multi-arch images
 on:
   workflow_dispatch:
 
-env:
-  ORIGIN: yt-dlp/manylinux-shared
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: false
@@ -19,5 +16,8 @@ jobs:
       - name: Install ORAS
         run: sudo snap install oras --classic
       - name: Deploy
-        if: github.repository == env.ORIGIN
+        if: github.repository == 'pypa/manylinux'
         run: ./deploy_multiarch.sh
+        env:
+          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}

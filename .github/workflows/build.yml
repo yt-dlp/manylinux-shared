@@ -8,6 +8,13 @@ on:
     paths:
       - ".github/workflows/build.yml"
       - "docker/**"
+      - "tests/**"
+      - "*.sh"
+  pull_request:
+    paths:
+      - ".github/workflows/build.yml"
+      - "docker/**"
+      - "tests/**"
       - "*.sh"
 
 env:
@@ -20,7 +27,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pre_commit:
+    name: Pre-commit checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd  # v3.0.1
+
   build_matrix:
+    needs: pre_commit
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
@@ -84,4 +102,11 @@ jobs:
         run: ./build.sh
 
       - name: Deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == env.ORIGIN
         run: ./deploy.sh
+
+  all_passed:
+    needs: [build_manylinux]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All jobs passed"

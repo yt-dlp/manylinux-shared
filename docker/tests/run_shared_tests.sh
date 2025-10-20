@@ -27,6 +27,7 @@ for PYTHON_VERSION in "${PYTHON_VERSIONS[@]}"; do
     mkdir -p ./test_pyinstaller
     pushd ./test_pyinstaller
     runpy -m venv ./.venv
+    # shellcheck disable=SC1091
     source ./.venv/bin/activate
     # Inside the venv we use venvpy instead of runpy
     venvpy -m ensurepip --upgrade --default-pip
