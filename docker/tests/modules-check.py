@@ -16,7 +16,10 @@ class TestModules(unittest.TestCase):
         # When the extension is not installed, it raises:
         # sqlite3.OperationalError: no such module: fts5
         conn = sqlite3.connect(":memory:")
-        conn.execute("create virtual table fts5test using fts5 (data);")
+        try:
+            conn.execute("create virtual table fts5test using fts5 (data);")
+        finally:
+            conn.close()
 
     def test_tkinter(self):
         # Make sure tkinter module can be loaded properly
@@ -61,6 +64,19 @@ class TestModules(unittest.TestCase):
         assert cxx == f"g++{pthread}", cxx
         assert config_vars["LDSHARED"] == f"{cc} -shared", config_vars["LDSHARED"]
         assert config_vars["LDCXXSHARED"] == f"{cxx} -shared", config_vars["LDCXXSHARED"]
+
+    @unittest.skipIf(sys.version_info[:2] < (3, 14), reason="not supported in this version")
+    def test_zstd(self):
+        from compression import zstd
+
+        print(f"{zstd.zstd_version_info=}", end=" ", file=sys.stderr)
+        assert zstd.zstd_version_info[:3] >= (1, 5, 7)
+
+    def test_ssl(self):
+        import ssl
+
+        print(f"{ssl.OPENSSL_VERSION_INFO=}", end=" ", file=sys.stderr)
+        assert ssl.OPENSSL_VERSION_INFO[:3] >= (1, 1, 1)
 
 
 if __name__ == "__main__":
