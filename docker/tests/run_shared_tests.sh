@@ -44,6 +44,15 @@ import ssl
 import sys
 
 
+try:
+    from compression import zstd
+    zstd_version_info = zstd.zstd_version_info
+except (ImportError, AttributeError):
+    if sys.version_info[:2] >= (3, 14):
+        raise
+    zstd_version_info = 'unavailable'
+
+
 def has_correct_glibc(maximum_version):
     version = tuple(map(int, platform.libc_ver()[1].split('.')))
     assert len(version) == 2
@@ -62,6 +71,7 @@ def main():
         platform.platform(),
         ssl.OPENSSL_VERSION,
         f'sqlite3 {sqlite3.sqlite_version}',
+        f'zstd {zstd_version_info}',
     )))
     needed_glibc = {
         'manylinux2014': (2, 17),
