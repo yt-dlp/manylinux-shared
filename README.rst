@@ -85,11 +85,15 @@ The manylinux project supports:
 
 - ``manylinux_2_28`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
+- ``manylinux_2_31`` images for ``armv7l``.
+
 - ``manylinux_2_34`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
+- ``manylinux_2_35`` images for ``armv7l``.
 
 - ``manylinux_2_39`` images for ``aarch64`` and ``riscv64``.
 
-- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le``, ``s390x`` and ``armv7l``.
+- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le``, ``s390x``, ``armv7l`` and ``riscv64``.
 
 
 Wheel packages compliant with those tags can be uploaded to
@@ -161,6 +165,36 @@ distros using glibc 2.39 or later, including:
 - CentOS/RHEL 10+
 
 
+manylinux_2_35 (Ubuntu 22.04 based) - armv7l only
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Caveat:
+
+Only Debian derivatives are available for armv7l. They do not provide recent builds of the GCC toolchain
+compatible with a vanilla install of the distribution. As such, we only get the GCC toolchain shipped with
+the base distribution.
+
+The package manager & packages names are different than what is found on other manylinux images.
+Other images are using RHEL derivatives only for now so using yum/dnf as a package manager and RHEL like
+packages names this image is using apt and Debian like packages names.
+
+If one depends on let's say OpenSSL development package, then, the commands to issue to install it are a bit different:
+
+- ``dnf -y install openssl-devel`` on RHEL derivatives
+- ``apt-get update && apt-get install -y libssl-dev`` on Debian derivatives
+
+
+Toolchain: GCC 11
+
+- armv7l image: ``quay.io/pypa/manylinux_2_35_armv7l``
+
+Built wheels are also expected to be compatible with other
+distros using glibc 2.35 or later, including:
+
+- Debian 12+
+- Ubuntu 22.04+
+
+
 manylinux_2_34 (AlmaLinux 9 based) - ALPHA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -189,8 +223,8 @@ distros using glibc 2.34 or later, including:
 - CentOS/RHEL 9+
 
 
-manylinux_2_31 (Ubuntu 20.04 based) - armv7l only - BETA
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+manylinux_2_31 (Ubuntu 20.04 based) - armv7l only
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Caveat:
 
