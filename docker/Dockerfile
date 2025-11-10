@@ -126,7 +126,7 @@ COPY build_scripts/build-tcltk.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     export TCL_ROOT=tcl8.6.17 && \
     export TCL_HASH=a3903371efcce8a405c5c245d029e9f6850258a60fa3761c4d58995610949b31 && \
-    export TCL_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
+    export TCL_DOWNLOAD_URL=https://github.com/bashonly/tcl-tk-mirror/releases/download/8.6.17 && \
     export TK_ROOT=tk8.6.17 && \
     export TK_HASH=e4982df6f969c08bf9dd858a6891059b4a3f50dc6c87c10abadbbe2fc4838946 && \
     /tmp/cross-compiler/entrypoint /build_scripts/build-tcltk.sh
