@@ -3,7 +3,7 @@ manylinux-shared
 
 Forked from https://github.com/pypa/manylinux and modified to include ``--enable-shared`` CPython builds for use with PyInstaller.
 
-Only the latest version of the CPython shared library (3.13) is provided in the images.
+Only versions 3.13 and 3.14 of the CPython shared library are provided in the images.
 
 The fork's GitHub Actions workflows are configured to only build and deploy the following images:
 
@@ -11,7 +11,7 @@ The fork's GitHub Actions workflows are configured to only build and deploy the 
 
 - ``manylinux_2_28`` images for ``x86_64`` and ``aarch64``.
 
-- ``manylinux_2_31`` image for ``armv7l`` (BETA).
+- ``manylinux_2_31`` image for ``armv7l``.
 
 - ``musllinux_1_2`` images for ``x86_64`` and ``aarch64``.
 
