@@ -9,6 +9,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 PYTHON_VERSION=
 PYTHON_VERSIONS=(
     "3.13"
+    "3.14"
 )
 
 function runpy {
