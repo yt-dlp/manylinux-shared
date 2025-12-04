@@ -176,7 +176,7 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-shared-cpython.sh thomas@python.org https://accounts.google.com 3.13.10
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-shared-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-shared-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.1
 
 
 FROM build_cpython AS build_cpython38
