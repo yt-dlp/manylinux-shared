@@ -117,7 +117,6 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gnupg2 gzip hardlink hostname libcurl libnsl libxcrypt which)
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
-	dnf -y upgrade
 	EPEL=epel-release
 	if [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "riscv64" ]; then
 		EPEL=
@@ -128,6 +127,7 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	else
 		dnf config-manager --set-enabled crb
 	fi
+	dnf -y upgrade
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
 		TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
 	else
@@ -162,7 +162,12 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 	# this is needed to ensure the new one will be found
 	# as LD_LIBRARY_PATH does not seem enough.
 	# c.f. https://github.com/pypa/manylinux/issues/1022
+	# we also want to keep those standard build directories searched by ld
+	# c.f. https://github.com/pypa/manylinux/issues/1886
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/00-manylinux.conf
+	if [ -d "/usr/local/lib64" ]; then
+		echo "/usr/local/lib64" >> /etc/ld.so.conf.d/00-manylinux.conf
+	fi
 	ldconfig
 else
 	# set the default shell to bash
