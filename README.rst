@@ -26,7 +26,7 @@ Differences in image content
 
 - Shared CPython 3.14 is installed in ``/opt/shared-cpython-3.14``.
 
-- OpenSSL 3.5 is always built and left installed in ``/opt/_internal/openssl-3.5``.
+- OpenSSL 3.* is always built, and it & all of its shared objects are kept in ``/opt/_internal/openssl-3.*``.
 
 
 Published images

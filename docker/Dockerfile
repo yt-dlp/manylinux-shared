@@ -251,12 +251,8 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
       pp311-pypy311_pp73
 # shared CPython
 RUN --mount=type=bind,target=/shared_cpython,from=shared_cpython \
-    mkdir -p /opt/_internal/openssl-3.5 && \
-    cp -rf /shared_cpython/opt/_internal/openssl-3.5/* /opt/_internal/openssl-3.5/ && \
-    mkdir -p /opt/shared-cpython-3.13 && \
-    cp -rf /shared_cpython/opt/shared-cpython-3.13/* /opt/shared-cpython-3.13/ && \
-    mkdir -p /opt/shared-cpython-3.14 && \
-    cp -rf /shared_cpython/opt/shared-cpython-3.14/* /opt/shared-cpython-3.14/
+    cp -rf /shared_cpython/opt/shared-cpython* /opt/ && \
+    cp -ru /shared_cpython/opt/_internal/openssl* /opt/_internal/
 
 COPY tests /opt/_internal/tests/
 
