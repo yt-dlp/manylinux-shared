@@ -6,34 +6,28 @@ set -exuo pipefail
 # Get script directory
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
+export PIP_CACHE_DIR=/tmp/pip_cache/
+
 PYTHON_VERSION=
 PYTHON_VERSIONS=(
     "3.13"
     "3.14"
 )
 
-function runpy {
-    "/opt/shared-cpython-${PYTHON_VERSION}/bin/python${PYTHON_VERSION}" "$@"
-}
-
-function venvpy {
-    "python${PYTHON_VERSION}" "$@"
-}
-
 for PYTHON_VERSION in "${PYTHON_VERSIONS[@]}"; do
-    runpy "${MY_DIR}/manylinux-check.py" "${AUDITWHEEL_POLICY}" "${AUDITWHEEL_ARCH}"
-    runpy "${MY_DIR}/ssl-check.py"
-    runpy "${MY_DIR}/modules-check.py"
+    # Run upstream tests
+    py"${PYTHON_VERSION}" "${MY_DIR}/manylinux-check.py" "${AUDITWHEEL_POLICY}" "${AUDITWHEEL_ARCH}"
+    py"${PYTHON_VERSION}" "${MY_DIR}/ssl-check.py"
+    py"${PYTHON_VERSION}" "${MY_DIR}/modules-check.py"
 
+    # Test that PyInstaller works
     mkdir -p ./test_pyinstaller
     pushd ./test_pyinstaller
-    runpy -m venv ./.venv
+    py"${PYTHON_VERSION}" -m venv ./.venv
     # shellcheck disable=SC1091
     source ./.venv/bin/activate
-    # Inside the venv we use venvpy instead of runpy
-    venvpy -m ensurepip --upgrade --default-pip
-    venvpy -m pip install -U pip
-    venvpy -m pip install -U pyinstaller
+    # Inside the venv we can use python instead of py3.13 or py3.14 etc
+    python -m pip install -U --require-hashes -r "${MY_DIR}/requirements-pyinstaller-${PYTHON_VERSION}.txt"
     mkdir -p test_script
     touch test_script/__init__.py
     cat << EOF > test_script/__main__.py
@@ -87,11 +81,12 @@ def main():
 if __name__ == '__main__':
     sys.exit(main())
 EOF
-    venvpy -m PyInstaller --name=test-executable --noconfirm --onefile ./test_script/__main__.py
+    python -m PyInstaller --name=test-executable --noconfirm --onefile ./test_script/__main__.py
     chmod +x ./dist/test-executable
     ./dist/test-executable
     popd
     rm -rf ./test_pyinstaller
+    deactivate
 done
 
 echo "run_shared_tests successful!"
