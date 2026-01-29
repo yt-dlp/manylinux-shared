@@ -252,7 +252,8 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
 # shared CPython
 RUN --mount=type=bind,target=/shared_cpython,from=shared_cpython \
     cp -rf /shared_cpython/opt/shared-cpython* /opt/ && \
-    cp -ru /shared_cpython/opt/_internal/openssl* /opt/_internal/
+    cp -ru /shared_cpython/opt/_internal/openssl* /opt/_internal/ && \
+    manylinux-entrypoint /opt/_internal/build_scripts/finalize-shared.sh
 
 COPY tests /opt/_internal/tests/
 

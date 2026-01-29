@@ -22,11 +22,11 @@ Usage of this fork to build any other images is not supported.
 Differences in image content
 ----------------------------
 
-- Shared CPython 3.13 is installed in ``/opt/shared-cpython-3.13``.
+- Shared CPython 3.13 is installed in ``/opt/shared-cpython-3.13`` and is made available as ``py3.13``.
 
-- Shared CPython 3.14 is installed in ``/opt/shared-cpython-3.14``.
+- Shared CPython 3.14 is installed in ``/opt/shared-cpython-3.14`` and is made available as ``py3.14``.
 
-- OpenSSL 3.* is always built, and it & all of its shared objects are kept in ``/opt/_internal/openssl-3.*``.
+- OpenSSL 3.* is always built, and it plus its shared objects are kept in ``/opt/_internal/openssl-3.*``.
 
 
 Published images
