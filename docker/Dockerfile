@@ -9,7 +9,7 @@ ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
 ARG MANYLINUX_CLANG_VERSION=21.1.8.1
-ARG MANYLINUX_COSIGN_VERSION=3.0.4
+ARG MANYLINUX_COSIGN_VERSION=3.0.5
 
 
 FROM $BASEIMAGE AS runtime_base_packages
@@ -104,8 +104,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base_openssl AS build_git
 COPY build_scripts/build-curl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export CURL_ROOT=curl-8.18.0 && \
-    export CURL_HASH=e9274a5f8ab5271c0e0e6762d2fce194d5f98acc568e4ce816845b2dcc0cf88f && \
+    export CURL_ROOT=curl-8.19.0 && \
+    export CURL_HASH=2a2c11db4c122691aa23b4363befda1bfd801770bfebf41e1d21cee4f2ab0f71 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /opt/_internal/build_scripts/
@@ -119,8 +119,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3510200 && \
-    export SQLITE_AUTOCONF_HASH=fbd89f866b1403bb66a143065440089dd76100f2238314d92274a082d4f2b7bb && \
+    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3520000 && \
+    export SQLITE_AUTOCONF_HASH=f6b50b0c103392af32a8be15b2b9d25959de9a00a70c3979128aafeaa5338b3f && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2026 && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-sqlite3.sh
 
@@ -195,17 +195,17 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_cpython AS build_cpython310
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.10.19
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.10.20
 
 FROM build_cpython AS build_cpython311
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.11.14
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.11.15
 
 FROM build_cpython AS build_cpython312
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.12
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.13
 
 FROM build_cpython AS build_cpython313
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
