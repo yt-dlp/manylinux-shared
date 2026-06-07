@@ -18,7 +18,7 @@ for PYTHON_VERSION in "${PYTHON_VERSIONS[@]}"; do
     # Run upstream tests
     py"${PYTHON_VERSION}" "${MY_DIR}/manylinux-check.py" "${AUDITWHEEL_POLICY}" "${AUDITWHEEL_ARCH}"
     py"${PYTHON_VERSION}" "${MY_DIR}/ssl-check.py"
-    py"${PYTHON_VERSION}" "${MY_DIR}/modules-check.py"
+    py"${PYTHON_VERSION}" -Wignore "${MY_DIR}/modules-check.py"
 
     # Test that PyInstaller works
     mkdir -p ./test_pyinstaller

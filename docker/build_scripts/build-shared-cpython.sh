@@ -27,14 +27,16 @@ function pyver_dist_dir {
 }
 
 CPYTHON_DIST_DIR=$(pyver_dist_dir "${CPYTHON_VERSION}")
-fetch_source "Python-${CPYTHON_VERSION}.tar.xz" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
-fetch_source "Python-${CPYTHON_VERSION}.tar.xz.sigstore" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
+fetch_source "Python-${CPYTHON_VERSION}.tar.xz" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}" skip-hash
+fetch_source "Python-${CPYTHON_VERSION}.tar.xz.sigstore" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}" skip-hash
 cosign  verify-blob "Python-${CPYTHON_VERSION}.tar.xz" --bundle "Python-${CPYTHON_VERSION}.tar.xz.sigstore" --certificate-identity="${CERT_IDENTITY}" --certificate-oidc-issuer="${CERT_OIDC_ISSUER}"
 
 tar -xJf "Python-${CPYTHON_VERSION}.tar.xz"
 pushd "Python-${CPYTHON_VERSION}"
 PREFIX="/opt/shared-cpython-$(echo "${CPYTHON_VERSION}" | awk -F "." '{printf "%d.%d", $1, $2}')"
 mkdir -p "${PREFIX}/lib"
+
+CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}"
 LDFLAGS_EXTRA="-Wl,-rpath=${PREFIX}/lib"
 CONFIGURE_ARGS=(
 	--enable-shared
@@ -44,11 +46,12 @@ CONFIGURE_ARGS=(
 
 # Building CPython 3.13 w/ --enable-optimizations results in test failures on Alpine (musllinux)
 # Failures: test.test_re.ReTests.test_locale_caching & test.test_re.ReTests.test_locale_compiled
-# TODO: Remove conditional if/when we bump to 3.14, as this issue is expected to be solved by it:
+# TODO: Remove conditional when we drop 3.13 images, as this issue is solved by 3.14:
 # https://github.com/python/cpython/issues/131342
 # https://github.com/python/cpython/commit/6146295a5b8e9286ccb8f90818b764c9a0192090
 # https://github.com/python/cpython/issues/90548
 # https://github.com/python/cpython/pull/138348
+# TODO: Make sure these configure args are added to musllinux 3.15
 if [ "${BASE_POLICY}" == "manylinux" ] || [ "${CPYTHON_VERSION:0:5}" == "3.14." ]; then
 	CONFIGURE_ARGS+=(
 		--enable-optimizations
@@ -91,7 +94,7 @@ unset _PYTHON_HOST_PLATFORM
 ./configure \
 	CC=gcc \
 	CXX=g++ \
-	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
+	CFLAGS_NODIST="${CFLAGS_NODIST}" \
 	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS} ${LDFLAGS_EXTRA}" \
 	"--prefix=${PREFIX}" "${CONFIGURE_ARGS[@]}" > /dev/null
 make > /dev/null
