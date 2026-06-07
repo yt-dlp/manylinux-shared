@@ -17,9 +17,6 @@ if [ "${AUDITWHEEL_POLICY}" != "manylinux2014" ]; then
 fi
 
 # Install libcrypt.so.1 and libcrypt.so.2
-check_var "${LIBXCRYPT_VERSION}"
-check_var "${LIBXCRYPT_HASH}"
-check_var "${LIBXCRYPT_DOWNLOAD_URL}"
 LIBXCRYPT_ROOT="libxcrypt-${LIBXCRYPT_VERSION}"
 
 if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ]; then
@@ -27,8 +24,7 @@ if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ]; then
 	MANYLINUX_LDFLAGS="-fuse-ld=ld ${MANYLINUX_LDFLAGS}"
 fi
 
-fetch_source "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_DOWNLOAD_URL}/v${LIBXCRYPT_VERSION}"
-check_sha256sum "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_HASH}"
+fetch_source "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_DOWNLOAD_URL}/v${LIBXCRYPT_VERSION}" "${LIBXCRYPT_HASH}"
 tar xfJ "${LIBXCRYPT_ROOT}.tar.xz"
 pushd "${LIBXCRYPT_ROOT}"
 DESTDIR=/manylinux-rootfs do_standard_install \

@@ -14,11 +14,7 @@ source "${MY_DIR}/build_utils.sh"
 PREFIX=/opt/_internal/sqlite3
 
 # Install a more recent SQLite3
-check_var "${SQLITE_AUTOCONF_ROOT}"
-check_var "${SQLITE_AUTOCONF_HASH}"
-check_var "${SQLITE_AUTOCONF_DOWNLOAD_URL}"
-fetch_source "${SQLITE_AUTOCONF_ROOT}.tar.gz" "${SQLITE_AUTOCONF_DOWNLOAD_URL}"
-check_sha256sum "${SQLITE_AUTOCONF_ROOT}.tar.gz" "${SQLITE_AUTOCONF_HASH}"
+fetch_source "${SQLITE_AUTOCONF_ROOT}.tar.gz" "${SQLITE_AUTOCONF_DOWNLOAD_URL}" "${SQLITE_AUTOCONF_HASH}"
 tar xfz "${SQLITE_AUTOCONF_ROOT}.tar.gz"
 pushd "${SQLITE_AUTOCONF_ROOT}"
 # add rpath

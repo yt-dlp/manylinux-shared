@@ -30,44 +30,30 @@ fi
 # shellcheck source=/dev/null
 OS_ID_LIKE=$(. /etc/os-release; echo "${ID} ${ID_LIKE:-}")
 case "${OS_ID_LIKE}" in
+	*anolis*) OS_ID_LIKE=rhel;;
 	*rhel*) OS_ID_LIKE=rhel;;
 	*debian) OS_ID_LIKE=debian;;
 	*alpine*) OS_ID_LIKE=alpine;;
 	*) echo "unsupported image"; exit 1;;
 esac
 
-function check_var {
-	if [ -z "$1" ]; then
-		echo "required variable not defined"
-		exit 1
-	fi
-}
-
-
 function fetch_source {
 	# This is called both inside and outside the build context (e.g. in Travis) to prefetch
 	# source tarballs, where curl exists (and works)
-	local file=$1
-	check_var "${file}"
-	local url=$2
-	check_var "${url}"
+	local file="$1"
+	local url="$2"
+	local sha256="$3"
 	if [ -f "${file}" ]; then
 		echo "${file} exists, skipping fetch"
 	else
 		curl -fsSL --retry 10 -o "${file}" "${url}/${file}"
 	fi
-}
-
-
-function check_sha256sum {
-	local fname=$1
-	check_var "${fname}"
-	local sha256=$2
-	check_var "${sha256}"
-
-	echo "${sha256}  ${fname}" > "${fname}.sha256"
-	sha256sum -c "${fname}.sha256"
-	rm -f "${fname}.sha256"
+	if [ "${sha256}" != "skip-hash" ]; then
+		if ! echo "${sha256}  ${file}" | sha256sum -c -; then
+			rm "${file}"
+			return 1
+		fi
+	fi
 }
 
 # shellcheck disable=SC2120 # optional arguments

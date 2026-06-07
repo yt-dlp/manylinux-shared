@@ -11,22 +11,13 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # shellcheck source-path=SCRIPTDIR
 source "${MY_DIR}/build_utils.sh"
 
-# Install a more recent curl
-check_var "${CURL_ROOT}"
-check_var "${CURL_HASH}"
-check_var "${CURL_DOWNLOAD_URL}"
-
-# Only needed on manylinux2014
+# Install a more recent curl, only needed on manylinux2014
 if [ "${AUDITWHEEL_POLICY}" != "manylinux2014" ]; then
 	echo "skipping installation of ${CURL_ROOT}"
 	exit 0
 fi
 
-if which yum; then
-	yum erase -y curl-devel
-else
-	apk del curl-dev
-fi
+yum erase -y curl-devel
 
 SO_COMPAT=4
 PREFIX=/opt/_internal/curl-${SO_COMPAT}
@@ -41,8 +32,7 @@ if [ -d /opt/_internal ]; then
 	fi
 fi
 
-fetch_source "${CURL_ROOT}.tar.gz" "${CURL_DOWNLOAD_URL}"
-check_sha256sum "${CURL_ROOT}.tar.gz" "${CURL_HASH}"
+fetch_source "${CURL_ROOT}.tar.gz" "${CURL_DOWNLOAD_URL}" "${CURL_HASH}"
 tar -xzf "${CURL_ROOT}.tar.gz"
 pushd "${CURL_ROOT}"
 ./configure --prefix=${PREFIX} --disable-static --without-libpsl --with-openssl CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS} -Wl,-rpath=\$(LIBRPATH) ${OPENSSL_LDFLAGS}" > /dev/null

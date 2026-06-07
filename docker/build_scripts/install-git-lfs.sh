@@ -17,6 +17,7 @@ case "${AUDITWHEEL_ARCH}" in
 	i686) GOARCH=386;;
 	aarch64) GOARCH=arm64;;
 	armv7l) GOARCH=arm;;
+	loongarch64) GOARCH=loong64;;
 	*) GOARCH="${AUDITWHEEL_ARCH}";;
 esac
 
@@ -31,8 +32,8 @@ fi
 
 tar -Ozxf "${MY_DIR}/git-lfs-core-gpg-keys" | gpg --import -
 
-curl -fsSL --retry 10 -o "${GIT_LFS_SHA256}" "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/sha256sums.asc"
-curl -fsSL --retry 10 -o "${GIT_LFS_ARCHIVE}" "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/${GIT_LFS_ARCHIVE}"
+fetch_source "${GIT_LFS_SHA256}" "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}" skip-hash
+fetch_source "${GIT_LFS_ARCHIVE}" "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}" skip-hash
 
 gpg -d "${GIT_LFS_SHA256}" | grep "${GIT_LFS_ARCHIVE}" | sha256sum -c
 if [ "${AUDITWHEEL_POLICY}" != "manylinux2014" ]; then

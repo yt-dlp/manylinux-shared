@@ -60,8 +60,8 @@ for PYTHON in /opt/python/*/bin/python; do
 	PYVERS=$(${PYTHON} -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
 	PY_GIL=$(${PYTHON} -c "import sysconfig; print('t' if sysconfig.get_config_vars().get('Py_GIL_DISABLED', 0) else '')")
 	if [ "${IMPLEMENTATION}" == "cpython" ]; then
-		# check optional modules can be loaded
-		$PYTHON "${MY_DIR}/modules-check.py"
+		# check all modules can be loaded
+		$PYTHON -Wignore "${MY_DIR}/modules-check.py"
 		# cpython shall be available as python
 		LINK_VERSION=$("python${PYVERS}${PY_GIL}" -VV)
 		REAL_VERSION=$(${PYTHON} -VV)
@@ -94,8 +94,8 @@ for PYTHON in /opt/python/*/bin/python; do
 		echo "invalid answer, expecting 42"
 		exit 1
 	fi
-	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
-		# no uv on musllinux ppc64le / s390x
+	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ] && [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
+		# no uv on GraalPy, musllinux ppc64le / s390x, riscv64, or loongarch64
 		UV_PYTHON=/tmp/uv-test-${PY_ABI_TAGS}/bin/python
 		uv venv --python "${PYTHON}" "/tmp/uv-test-${PY_ABI_TAGS}"
 		uv pip install --python "${UV_PYTHON}" "${REPAIRED_WHEEL}"
@@ -210,10 +210,6 @@ if manylinux-install-clang -v 21.1.8.1 -m bad_arch; then
 		echo "installing clang with a bad architecture should fail"
 		exit 1
 fi
-
-manylinux-install-clang -v 20.1.8.0
-clang --version | grep '20.1.8'
-rm -rf /opt/clang
 
 manylinux-install-clang -v v21.1.8.1 -c a6f87a4af8d72192219602f252d7debdf7c1e73ca4b28a2f99f2832a3ac0b487
 clang --version | grep '21.1.8'

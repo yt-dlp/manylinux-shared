@@ -12,9 +12,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 # Install a more recent openssl
-check_var "${OPENSSL_ROOT}"
-check_var "${OPENSSL_HASH}"
-check_var "${OPENSSL_DOWNLOAD_URL}"
 
 OPENSSL_VERSION=${OPENSSL_ROOT#*-}
 OPENSSL_MIN_VERSION=1.1.1
@@ -52,8 +49,7 @@ if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
 	LIBATOMIC=-latomic
 fi
 
-fetch_source "${OPENSSL_ROOT}.tar.gz" "${OPENSSL_DOWNLOAD_URL}"
-check_sha256sum "${OPENSSL_ROOT}.tar.gz" "${OPENSSL_HASH}"
+fetch_source "${OPENSSL_ROOT}.tar.gz" "${OPENSSL_DOWNLOAD_URL}" "${OPENSSL_HASH}"
 tar -xzf "${OPENSSL_ROOT}.tar.gz"
 pushd "${OPENSSL_ROOT}"
 ./Configure "--prefix=${PREFIX}" "--openssldir=${PREFIX}" --libdir=lib no-afalgeng CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS} -Wl,-rpath,\$(LIBRPATH) ${LIBATOMIC}" > /dev/null

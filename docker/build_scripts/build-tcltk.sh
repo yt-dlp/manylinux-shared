@@ -13,11 +13,6 @@ source "${MY_DIR}/build_utils.sh"
 
 # Install a more recent Tcl/Tk 8.6
 # https://www.tcl.tk/software/tcltk/download.html
-check_var "${TCL_ROOT}"
-check_var "${TCL_HASH}"
-check_var "${TCL_DOWNLOAD_URL}"
-check_var "${TK_ROOT}"
-check_var "${TK_HASH}"
 
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	yum erase -y tcl tk
@@ -27,10 +22,8 @@ else
 	exit 0
 fi
 
-fetch_source "${TCL_ROOT}-src.tar.gz" "${TCL_DOWNLOAD_URL}"
-check_sha256sum "${TCL_ROOT}-src.tar.gz" "${TCL_HASH}"
-fetch_source "${TK_ROOT}-src.tar.gz" "${TCL_DOWNLOAD_URL}"
-check_sha256sum "${TK_ROOT}-src.tar.gz" "${TK_HASH}"
+fetch_source "${TCL_ROOT}-src.tar.gz" "${TCL_DOWNLOAD_URL}" "${TCL_HASH}"
+fetch_source "${TK_ROOT}-src.tar.gz" "${TCL_DOWNLOAD_URL}" "${TK_HASH}"
 
 tar xfz "${TCL_ROOT}-src.tar.gz"
 pushd "${TCL_ROOT}/unix"

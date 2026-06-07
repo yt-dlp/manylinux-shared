@@ -12,9 +12,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 # Install newest automake
-check_var "${AUTOMAKE_ROOT}"
-check_var "${AUTOMAKE_HASH}"
-check_var "${AUTOMAKE_DOWNLOAD_URL}"
 
 AUTOMAKE_VERSION=${AUTOMAKE_ROOT#*-}
 if automake --version > /dev/null 2>&1; then
@@ -32,10 +29,9 @@ fi
 
 SYSTEM_ACLOCAL="$(which aclocal)"
 
-if ! fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL}"; then
-	fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}";
+if ! fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL}" "${AUTOMAKE_HASH}"; then
+	fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}" "${AUTOMAKE_HASH}"
 fi
-check_sha256sum "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_HASH}"
 tar -zxf "${AUTOMAKE_ROOT}.tar.gz"
 pushd "${AUTOMAKE_ROOT}"
 DESTDIR=/manylinux-rootfs do_standard_install

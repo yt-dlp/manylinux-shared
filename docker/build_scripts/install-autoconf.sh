@@ -13,9 +13,6 @@ source "${MY_DIR}/build_utils.sh"
 
 
 # Install newest autoconf
-check_var "${AUTOCONF_ROOT}"
-check_var "${AUTOCONF_HASH}"
-check_var "${AUTOCONF_DOWNLOAD_URL}"
 
 AUTOCONF_VERSION=${AUTOCONF_ROOT#*-}
 if autoconf --version > /dev/null 2>&1; then
@@ -30,10 +27,9 @@ if autoconf --version > /dev/null 2>&1; then
 fi
 
 
-if ! fetch_source "${AUTOCONF_ROOT}.tar.gz" "${AUTOCONF_DOWNLOAD_URL}"; then
-	fetch_source "${AUTOCONF_ROOT}.tar.gz" "${AUTOCONF_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}";
+if ! fetch_source "${AUTOCONF_ROOT}.tar.gz" "${AUTOCONF_DOWNLOAD_URL}" "${AUTOCONF_HASH}"; then
+	fetch_source "${AUTOCONF_ROOT}.tar.gz" "${AUTOCONF_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}" "${AUTOCONF_HASH}"
 fi
-check_sha256sum "${AUTOCONF_ROOT}.tar.gz" "${AUTOCONF_HASH}"
 tar -zxf "${AUTOCONF_ROOT}.tar.gz"
 pushd "${AUTOCONF_ROOT}"
 DESTDIR=/manylinux-rootfs do_standard_install

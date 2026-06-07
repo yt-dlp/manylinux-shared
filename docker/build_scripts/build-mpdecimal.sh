@@ -12,14 +12,10 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 # Install a more recent mpdecimal
-check_var "${MPDECIMAL_ROOT}"
-check_var "${MPDECIMAL_HASH}"
-check_var "${MPDECIMAL_DOWNLOAD_URL}"
 
 PREFIX=/opt/_internal/${MPDECIMAL_ROOT%%.*}
 
-fetch_source "${MPDECIMAL_ROOT}.tar.gz" "${MPDECIMAL_DOWNLOAD_URL}"
-check_sha256sum "${MPDECIMAL_ROOT}.tar.gz" "${MPDECIMAL_HASH}"
+fetch_source "${MPDECIMAL_ROOT}.tar.gz" "${MPDECIMAL_DOWNLOAD_URL}" "${MPDECIMAL_HASH}"
 tar xfz "${MPDECIMAL_ROOT}.tar.gz"
 pushd "${MPDECIMAL_ROOT}"
 # add rpath
