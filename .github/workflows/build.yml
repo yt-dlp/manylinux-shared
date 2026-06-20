@@ -125,3 +125,23 @@ jobs:
         uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
           jobs: ${{ toJSON(needs) }}
+
+  deploy_multiarch:
+    if: needs.build_matrix.outputs.environment == 'quay.io'
+    name: Deploy multi-arch images
+    needs: [build_matrix, all_passed]
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    environment: quay.io
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Install ORAS
+        uses: oras-project/setup-oras@38de303aac69abb66f3e6255b7198bff35f323e3 # v2.0.0
+      - name: Deploy
+        run: ./deploy_multiarch.sh
+        env:
+          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
