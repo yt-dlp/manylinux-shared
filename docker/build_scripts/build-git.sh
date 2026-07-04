@@ -50,6 +50,7 @@ make install \
 	prefix=/usr/local \
 	NO_GETTEXT=1 \
 	NO_TCLTK=1 \
+	NO_RUST=1 \
 	INSTALL_SYMLINKS=1 \
 	INSTALL_STRIP=-s \
 	DESTDIR=/manylinux-rootfs \

@@ -8,7 +8,7 @@ ARG PREPEND_PATH=/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:
 ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
-ARG MANYLINUX_CLANG_VERSION=22.1.8.0
+ARG MANYLINUX_CLANG_VERSION=22.1.8.1
 ARG MANYLINUX_COSIGN_VERSION=3.1.1
 
 
@@ -104,14 +104,14 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base_openssl AS build_git
 COPY build_scripts/build-curl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export CURL_ROOT=curl-8.20.0 && \
-    export CURL_HASH=fc5819cad3f9f5482669adcdc49a782c15f36d2a0715b395b06d9173593d2dc0 && \
+    export CURL_ROOT=curl-8.21.0 && \
+    export CURL_HASH=d9b327997999045a24cda50f3983e69e51c516bd8be6ef9842fc7f99135e33bb && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export GIT_ROOT=git-2.54.0 && \
-    export GIT_HASH=45e8107643a44e3ce46f5665beb35af3932fb0d70017687905ab5d4e3aafa8eb && \
+    export GIT_ROOT=git-2.55.0 && \
+    export GIT_HASH=0842dc384a23ac33ba3e570c4f3a8ded85963ee4713b1cd21153c3db41813d1e && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-git.sh
 
@@ -119,8 +119,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3530200 && \
-    export SQLITE_AUTOCONF_HASH=588ad51949419a56ebe81fe56193d510c559eb94c9a57748387860b5d3069316 && \
+    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3530300 && \
+    export SQLITE_AUTOCONF_HASH=c917d7db16648ec95f714974ace5e5dcf46b7dc70e26600a0a102a3141125db0 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2026 && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-sqlite3.sh
 
@@ -220,12 +220,12 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_cpython AS build_cpython315
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0b2
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0b3
 
 FROM build_cpython AS build_cpython315_nogil
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0b2 nogil
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0b3 nogil
 
 
 FROM runtime_base
@@ -258,6 +258,7 @@ RUN --mount=type=bind,target=/shared_cpython,from=shared_cpython \
 COPY tests /opt/_internal/tests/
 
 ENV PATH=/opt/clang/bin:${PATH}
+ENV PIPX_DISABLE_SHARED_LIBS_AUTO_UPGRADE=1
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 CMD ["/bin/bash"]
