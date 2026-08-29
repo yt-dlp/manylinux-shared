@@ -172,8 +172,8 @@ FROM build_cpython AS shared_cpython
 COPY build_scripts/build-openssl-for-shared-cpython.sh /opt/_internal/build_scripts/
 COPY build_scripts/build-shared-cpython.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export OPENSSL_ROOT=openssl-3.5.7 && \
-    export OPENSSL_HASH=a8c0d28a529ca480f9f36cf5792e2cd21984552a3c8e4aa11a24aa31aeac98e8 && \
+    export OPENSSL_ROOT=openssl-3.5.8 && \
+    export OPENSSL_HASH=a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b2 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-openssl-for-shared-cpython.sh
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
