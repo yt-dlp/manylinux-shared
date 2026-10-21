@@ -33,6 +33,18 @@
       "sha256": "e57472272b1b659ae6ac972117723b0515a49cc9577688ed5563919793170d67"
     }
   },
+  "graalpy313-graalpy253_313_native": {
+    "manylinux_2_28_x86_64": {
+      "version": "25.4.4",
+      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-25.4.4/graalpy3.13-25.4.4-linux-amd64.tar.gz",
+      "sha256": "8b72e6e513d06976e5c8e051228d69d541fde76d05d5f907eaef4bb31db83af4"
+    },
+    "manylinux_2_28_aarch64": {
+      "version": "25.4.4",
+      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-25.4.4/graalpy3.13-25.4.4-linux-aarch64.tar.gz",
+      "sha256": "1323dc064583efd1d6b696d3a9f9e4b1ff8facd0f7cc2b69fe0a0bf7ef06ea1a"
+    }
+  },
   "pp39-pypy39_pp73": {
     "manylinux_2_17_x86_64": {
       "version": "7.3.16",
@@ -82,6 +94,40 @@
       "version": "7.3.23",
       "download_url": "https://downloads.python.org/pypy/pypy3.11-v7.3.23-linux32.tar.bz2",
       "sha256": "c7e2ffb173dcadbe4708a2e606e0b705474c1c33f25a09a4084f265d538172e4"
+    }
+  },
+  "pp311-pypy311_pp80": {
+    "manylinux_2_28_x86_64": {
+      "version": "8.0.1",
+      "download_url": "https://downloads.python.org/pypy/pypy3.11-v8.0.1-linux64.tar.gz",
+      "sha256": "706965bcf372752ba69dafd59d860e51bc2fadbb0f8a47cec3426125d7058ceb"
+    },
+    "manylinux_2_28_aarch64": {
+      "version": "8.0.1",
+      "download_url": "https://downloads.python.org/pypy/pypy3.11-v8.0.1-aarch64.tar.gz",
+      "sha256": "5b568e1515dee46df58c9844dba95921c69dfd9f38ebf9e0f091caad5e10cd0c"
+    },
+    "manylinux_2_28_i686": {
+      "version": "8.0.1",
+      "download_url": "https://downloads.python.org/pypy/pypy3.11-v8.0.1-linux32.tar.gz",
+      "sha256": "fdafc3aa7a17e25f7ba63a6a2baa91c4a765c1c9a99149759e583f68e68115e5"
+    }
+  },
+  "pp312-pypy312_pp80": {
+    "manylinux_2_28_x86_64": {
+      "version": "8.0.1",
+      "download_url": "https://downloads.python.org/pypy/pypy3.12-v8.0.1-linux64.tar.gz",
+      "sha256": "aeed27797777296d9c94e53bdfa608804696dbd4ff9f2213003cce064ee46ef8"
+    },
+    "manylinux_2_28_aarch64": {
+      "version": "8.0.1",
+      "download_url": "https://downloads.python.org/pypy/pypy3.12-v8.0.1-aarch64.tar.gz",
+      "sha256": "4dd9611f782f0974ffd25b521120b4297049daec05a3cec5698dbc6022c74fb9"
+    },
+    "manylinux_2_28_i686": {
+      "version": "8.0.1",
+      "download_url": "https://downloads.python.org/pypy/pypy3.12-v8.0.1-linux32.tar.gz",
+      "sha256": "aac46889fd2e85e522f5446256cd57167f91648c48d906d79eb593c812dbe55f"
     }
   }
 }

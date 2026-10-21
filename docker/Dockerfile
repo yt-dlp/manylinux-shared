@@ -8,7 +8,7 @@ ARG PREPEND_PATH=/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:
 ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
-ARG MANYLINUX_CLANG_VERSION=22.1.8.1
+ARG MANYLINUX_CLANG_VERSION=23.1.3.0
 ARG MANYLINUX_COSIGN_VERSION=3.1.3
 
 
@@ -67,8 +67,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 
 COPY build_scripts/install-automake.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export AUTOMAKE_ROOT=automake-1.18.1 && \
-    export AUTOMAKE_HASH=63e585246d0fc8772dffdee0724f2f988146d1a3f1c756a3dc5cfbefa3c01915 && \
+    export AUTOMAKE_ROOT=automake-1.19 && \
+    export AUTOMAKE_HASH=79e8b1f7a967e87ce8a9ded76bee7f793d0ce1886ab2002feb1b0510f578b75a && \
     export AUTOMAKE_DOWNLOAD_URL=https://ftpmirror.gnu.org/gnu/automake && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/install-automake.sh
 
@@ -95,8 +95,8 @@ RUN manylinux-entrypoint /opt/_internal/build_scripts/install-build-packages.sh
 FROM build_base AS build_base_openssl
 COPY build_scripts/build-openssl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export OPENSSL_ROOT=openssl-3.5.8 && \
-    export OPENSSL_HASH=a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b2 && \
+    export OPENSSL_ROOT=openssl-3.5.9 && \
+    export OPENSSL_HASH=603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-openssl.sh
 
@@ -104,14 +104,14 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base_openssl AS build_git
 COPY build_scripts/build-curl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export CURL_ROOT=curl-8.21.0 && \
-    export CURL_HASH=d9b327997999045a24cda50f3983e69e51c516bd8be6ef9842fc7f99135e33bb && \
+    export CURL_ROOT=curl-8.23.0 && \
+    export CURL_HASH=e3de77cfa6367083c776a26647fc9f633b538c06c3baa73d931a252ac8f72b49 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export GIT_ROOT=git-2.55.0 && \
-    export GIT_HASH=0842dc384a23ac33ba3e570c4f3a8ded85963ee4713b1cd21153c3db41813d1e && \
+    export GIT_ROOT=git-2.56.0 && \
+    export GIT_HASH=826817fd3671b8565586d6d49f688298de8354ab11db829c02720e5c74b9b39f && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-git.sh
 
@@ -119,8 +119,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3530400 && \
-    export SQLITE_AUTOCONF_HASH=0e9483900e92cd5de8fd48d16bf9200145a61f7fd5be542a5ac81d8a9516eb9c && \
+    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3540100 && \
+    export SQLITE_AUTOCONF_HASH=926ef8d3eab93fbf6e06011901273eec076b25594a4e1cdadd50c987f4f6d64e && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2026 && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-sqlite3.sh
 
@@ -190,42 +190,42 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_cpython AS build_cpython310
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.10.21
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.10.22
 
 FROM build_cpython AS build_cpython311
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.11.16
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.11.17
 
 FROM build_cpython AS build_cpython312
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.14
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.15
 
 FROM build_cpython AS build_cpython313
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.15
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.16
 
 FROM build_cpython AS build_cpython314
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.7
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.8
 
 FROM build_cpython AS build_cpython314_nogil
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.7 nogil
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.8 nogil
 
 FROM build_cpython AS build_cpython315
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0rc1
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0
 
 FROM build_cpython AS build_cpython315_nogil
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0rc1 nogil
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0 nogil
 
 
 FROM runtime_base
@@ -248,7 +248,9 @@ RUN --mount=type=bind,target=/build_cpython39,from=build_cpython39 \
     cp -rf /build_cpython*/opt/_internal/cpython* /opt/_internal/ && \
     if test -n "$(find /build_cpython315/opt/_internal -maxdepth 1 -name 'openssl*' -print -quit)"; then cp -rf /build_cpython315/opt/_internal/openssl* /opt/_internal/; fi && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
-      pp311-pypy311_pp73
+      pp311-pypy311_pp73 \
+      pp311-pypy311_pp80 \
+      pp312-pypy312_pp80
 # shared CPython
 RUN --mount=type=bind,target=/shared_cpython,from=shared_cpython \
     cp -rf /shared_cpython/opt/shared-cpython* /opt/ && \
