@@ -12,6 +12,7 @@ PYTHON_VERSION=
 PYTHON_VERSIONS=(
     "3.13"
     "3.14"
+    "3.15"
 )
 
 for PYTHON_VERSION in "${PYTHON_VERSIONS[@]}"; do

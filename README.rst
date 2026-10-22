@@ -3,7 +3,7 @@ manylinux-shared
 
 Forked from https://github.com/pypa/manylinux and modified to include ``--enable-shared`` CPython builds for use with PyInstaller.
 
-Only versions 3.13 and 3.14 of the CPython shared library are provided in the images.
+Only versions 3.13, 3.14 and 3.15 of the CPython shared library are provided in the images.
 
 The fork's GitHub Actions workflows are configured to only build and deploy the following images:
 
@@ -25,6 +25,8 @@ Differences in image content
 - Shared CPython 3.13 is installed in ``/opt/shared-cpython-3.13`` and is made available as ``py3.13``.
 
 - Shared CPython 3.14 is installed in ``/opt/shared-cpython-3.14`` and is made available as ``py3.14``.
+
+- Shared CPython 3.15 is installed in ``/opt/shared-cpython-3.15`` and is made available as ``py3.15``.
 
 - OpenSSL 3.* is always built, and it plus its shared objects are kept in ``/opt/_internal/openssl-3.*``.
 

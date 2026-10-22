@@ -180,7 +180,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-shared-cpython.sh thomas@python.org https://accounts.google.com 3.13.17
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-shared-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.9
-
+RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-shared-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.1
 
 FROM build_cpython AS build_cpython39
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
