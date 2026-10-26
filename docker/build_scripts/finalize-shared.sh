@@ -15,6 +15,7 @@ export PIP_ROOT_USER_ACTION=ignore
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PIP_NO_WARN_SCRIPT_LOCATION=0
 export PIP_CACHE_DIR=/tmp/pip_cache/
+export PIP_CERT=${SSL_CERT_FILE}
 
 for PREFIX in /opt/shared-cpython*; do
 	# Some python's install as bin/python3. Make them available as bin/python
@@ -26,7 +27,8 @@ for PREFIX in /opt/shared-cpython*; do
 
 	# Install pinned packages for this python version.
 	# Use the already installed non-shared cpython pip to bootstrap pip
-	"/usr/local/bin/cpython${PY_VER}" -m pip --python "${PREFIX}/bin/python" install -U --require-hashes -r "${MY_DIR}/requirements${PY_VER}.txt"
+	"/usr/local/bin/cpython${PY_VER}" -m pip --python "${PREFIX}/bin/python" install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/pip.txt"
+	"/usr/local/bin/cpython${PY_VER}" -m pip --python "${PREFIX}/bin/python" install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/packages.txt"
 
 	if [ -e "${PREFIX}/bin/pip3" ] && [ ! -e "${PREFIX}/bin/pip" ]; then
 		ln -s pip3 "${PREFIX}/bin/pip"

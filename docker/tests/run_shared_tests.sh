@@ -28,7 +28,7 @@ for PYTHON_VERSION in "${PYTHON_VERSIONS[@]}"; do
     # shellcheck disable=SC1091
     source ./.venv/bin/activate
     # Inside the venv we can use python instead of py3.13 or py3.14 etc
-    python -m pip install -U --require-hashes -r "${MY_DIR}/requirements-pyinstaller-${PYTHON_VERSION}.txt"
+    python -m pip install -U --require-hashes -r "${MY_DIR}/requirements/pyinstaller-${PYTHON_VERSION}.txt"
     mkdir -p test_script
     touch test_script/__init__.py
     cat << EOF > test_script/__main__.py
