@@ -72,6 +72,7 @@ def main():
         'manylinux2014': (2, 17),
         'manylinux_2_28': (2, 28),
         'manylinux_2_31': (2, 31),
+        'manylinux_2_35': (2, 35),
     }.get(os.environ['AUDITWHEEL_POLICY'])
     if not needed_glibc or has_correct_glibc(needed_glibc):
         return 0

@@ -13,6 +13,8 @@ The fork's GitHub Actions workflows are configured to only build and deploy the 
 
 - ``manylinux_2_31`` image for ``armv7l``.
 
+- ``manylinux_2_35`` image for ``armv7l``.
+
 - ``musllinux_1_2`` images for ``x86_64`` and ``aarch64``.
 
 
@@ -39,6 +41,7 @@ Published images
 - manylinux_2_28 x86_64 image: ``ghcr.io/yt-dlp/manylinux_2_28_x86_64-shared``
 - manylinux_2_28 aarch64 image: ``ghcr.io/yt-dlp/manylinux_2_28_aarch64-shared``
 - manylinux_2_31 armv7l image: ``ghcr.io/yt-dlp/manylinux_2_31_armv7l-shared``
+- manylinux_2_35 armv7l image: ``ghcr.io/yt-dlp/manylinux_2_35_armv7l-shared``
 - musllinux_1_2 x86_64 image: ``ghcr.io/yt-dlp/musllinux_1_2_x86_64-shared``
 - musllinux_1_2 aarch64 image: ``ghcr.io/yt-dlp/musllinux_1_2_aarch64-shared``
 

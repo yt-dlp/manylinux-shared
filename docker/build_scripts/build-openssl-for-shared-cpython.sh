@@ -41,6 +41,14 @@ if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
 	LIBATOMIC=-latomic
 fi
 
+if [ "${AUDITWHEEL_POLICY}-${AUDITWHEEL_ARCH}" == "manylinux_2_35-armv7l" ] ; then
+	# Ref:
+	# https://github.com/openssl/openssl/issues/21630
+	# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996419
+	MANYLINUX_CFLAGS="${MANYLINUX_CFLAGS} -march=armv7-a+fp"
+	MANYLINUX_CXXFLAGS="${MANYLINUX_CXXFLAGS} -march=armv7-a+fp"
+fi
+
 fetch_source "${OPENSSL_ROOT}.tar.gz" "${OPENSSL_DOWNLOAD_URL}" "${OPENSSL_HASH}"
 tar -xzf "${OPENSSL_ROOT}.tar.gz"
 pushd "${OPENSSL_ROOT}"
